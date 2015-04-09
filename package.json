@@ -1,0 +1,23 @@
+{
+  "name": "BUCourseDescriptionAPI",
+  "version": "1.0.0",
+  "description": "",
+  "main": "BUAPI.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hirokiosame/BUCourseDescriptionAPI.git"
+  },
+  "author": "Hiroki Osame",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hirokiosame/BUCourseDescriptionAPI/issues"
+  },
+  "homepage": "https://github.com/hirokiosame/BUCourseDescriptionAPI",
+  "dependencies": {
+    "async": "^0.9.0",
+    "cheerio": "^0.19.0"
+  }
+}
