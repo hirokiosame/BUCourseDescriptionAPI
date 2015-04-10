@@ -34,3 +34,13 @@ API.sections("CAS", "CS", "111", function(err, sections){
 	console.assert(!err, "There is an error", err);
 	console.assert(typeof sections === "object", "Unexpected 'sections' type", typeof sections);
 });
+
+
+API.sections("CAS", "CS", "111", function(err, sections){
+	console.log(JSON.stringify(sections, 0, 3));
+});
+
+
+API.sections("CAS", "LJ", "111", function(err, sections){
+	console.log(JSON.stringify(sections, 0, 3));
+});

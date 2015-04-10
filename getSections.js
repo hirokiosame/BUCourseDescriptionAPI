@@ -30,7 +30,7 @@ module.exports = (function(){
 
 				for( var key in sectionsObj ){
 
-					sectionsObj[key].seats = seats[key] ? +seats[key] : null;
+					sectionsObj[key].openSeats = seats[key] ? +seats[key] : null;
 
 					sections.push(sectionsObj[key]);
 				}
@@ -54,10 +54,12 @@ module.exports = (function(){
 		return mins;
 	}
 
-	function parseSchedule(loc, time){
-		var sched = {};
+	function parseSchedule(type, loc, time){
+		var sched = {
+			type: type.trim()
+		};
 
-		if( loc.length > 1 ){
+		if( (loc = loc.trim()).length > 1 ){
 			var _loc = loc.split(" ");
 			if( _loc.length === 2 ){
 				sched.location = {
@@ -87,29 +89,28 @@ module.exports = (function(){
 
 		var html = $tr.html();
 
-		var match = html.match(tdPattern);
+		var trMatch = html.match(tdPattern);
 
-		if( !match ){ return; }
+		if( !trMatch ){ return; }
 
 		var section = {
 			semester: sem,
-			section: match[1].trim(),
-			instructor: match[3].trim() || null,
-			type: match[4].trim() || null,
+			section: trMatch[1].trim(),
+			instructor: trMatch[3].trim() || null,
 			schedule: [],
 			seatsKey: seatsKey,
-			notes: match[8].trim() || null
+			notes: trMatch[8].trim() || null
 		};
 
-		var parsedSched = parseSchedule(match[5], match[6]);
+		var parsedSched = parseSchedule(trMatch[4], trMatch[5], trMatch[6]);
 		if( parsedSched ){ section.schedule.push(parsedSched); }
 
 		// Check for dependent sections
 		while( (tr = tr.next) && !tr.attribs["data-section"] ){
-			match = $(tr).html().match(depPattern);
+			var match = $(tr).html().match(depPattern);
 
 			if( match ){
-				if( parsedSched = parseSchedule(match[2], match[3]) ){
+				if( parsedSched = parseSchedule(match[1] || trMatch[4], match[2], match[3]) ){
 					section.schedule.push(parsedSched);
 				}
 			}
