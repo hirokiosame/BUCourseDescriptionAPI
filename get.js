@@ -64,7 +64,7 @@ module.exports = (function(){
 			}
 
 			methods.http(uri, params, function(err, result){
-				if( err ){ cb(err); }
+				if( err ){ cb(err); return; }
 
 				try{ result = JSON.parse(result); }
 				catch(e){ cb(e, result); }
