@@ -29,7 +29,7 @@ module.exports = (function(){
 					hostname: _uri.hostname,
 					path: _uri.path,
 					headers: {
-						"Accept": "application/json",
+						"Accept": "*/*",
 						"Accept-Encoding": "gzip",
 						"Cache-Control": "max-age=0",
 						"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.104 Safari/537.36"
@@ -64,8 +64,10 @@ module.exports = (function(){
 			}
 
 			methods.http(uri, params, function(err, result){
+				if( err ){ cb(err); }
+
 				try{ result = JSON.parse(result); }
-				catch(e){ cb(e); }
+				catch(e){ cb(e, result); }
 
 				if( typeof result === "object" ){ cb(null, result); }
 			});
