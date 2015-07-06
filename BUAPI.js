@@ -40,25 +40,36 @@ module.exports = (function(){
 
 			var self = this;
 
+
+			function collegeKey(colleges){
+
+				var _colleges = {};
+
+				colleges.forEach(function(c){
+					_colleges[c.collegeCode] = c;
+				});
+
+				return _colleges;
+			}
+
+
 			this.bulletin(function(err, bResult){
 				if( err ){ cb(err); return; }
 
-
-
-				var _bResult = {};
-				bResult.forEach(function(c){
-					_bResult[c.collegeCode] = c;
-				});
+				var _bResult = collegeKey(bResult);
 				
+				// Get colleges via API
 				self.colleges(function(err, cResult){
 					if( err ){ cb(err); return; }
 
 					var colleges = {};
+
+					// Iterate colleges
 					cResult.ResultSet.Result.forEach(function(col){
 
-						if( !_bResult[cc] ){ return; }
-
 						var cc = col.college_code;
+
+						if( !_bResult[cc] ){ return; }
 
 						if( !_bResult[cc].departments.length ){
 							var CC = _bResult[cc].collegeName.match(/[A-Z]{3}/);
