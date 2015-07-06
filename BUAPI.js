@@ -43,16 +43,20 @@ module.exports = (function(){
 			this.bulletin(function(err, bResult){
 				if( err ){ cb(err); return; }
 
+
+
 				var _bResult = {};
 				bResult.forEach(function(c){
 					_bResult[c.collegeCode] = c;
 				});
-
+				
 				self.colleges(function(err, cResult){
 					if( err ){ cb(err); return; }
 
 					var colleges = {};
 					cResult.ResultSet.Result.forEach(function(col){
+
+						if( !_bResult[cc] ){ return; }
 
 						var cc = col.college_code;
 
