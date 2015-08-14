@@ -88,6 +88,8 @@ module.exports = (function(){
 			});
 		},
 
-		sections: require("./getSections")
+		sections: require("./getSections"),
+
+		seats: require("./getSeats")
 	};
 })();

@@ -17,30 +17,6 @@ module.exports = (function(){
 	depPattern = new RegExp(depPattern);
 
 
-	function getOpenSeats(sectionsObj, cb){
-		get.JSON(
-			"http://www.bu.edu/phpbin/summer/rpc/openseats.php",
-			{ "sections[]": Object.keys(sectionsObj) },
-			function(err, res){
-
-				if( err ){ cb(err); return; }
-
-				var seats = res.results,
-					sections = [];
-
-				for( var key in sectionsObj ){
-
-					sectionsObj[key].openSeats = seats[key] ? +seats[key] : null;
-
-					sections.push(sectionsObj[key]);
-				}
-
-				// Return result
-				cb(null, sections);
-			}
-		);
-	}
-
 	function parseTime(time, pm){
 
 		time = time.split(":");
@@ -99,7 +75,13 @@ module.exports = (function(){
 			instructor: trMatch[3].trim() || null,
 			schedule: [],
 			seatsKey: seatsKey,
-			notes: trMatch[8].trim() || null
+			notes: (function(note) {
+				note = note.trim().replace(/\<br\>/gmi, "\n");
+
+				if( note.length === 0 ){ return null; }
+
+				return note;
+			})(trMatch[8])
 		};
 
 		var parsedSched = parseSchedule(trMatch[4], trMatch[5], trMatch[6]);
@@ -137,6 +119,13 @@ module.exports = (function(){
 		);
 	}
 
+	var getSeats = require("./getSeats");
+
+	function untilN(n, cb) {
+		return function() {
+			(--n === 0) && cb();
+		};
+	}
 
 	return function(collegeCode, depCode, courseNum, cb){
 		get.http(
@@ -161,7 +150,22 @@ module.exports = (function(){
 					function(err){
 						if( err ){ throw err; }
 
-						getOpenSeats(sections, cb);
+						var sectionsArr = [],
+							done = untilN(Object.keys(sections).length, function() {
+								cb(null, sectionsArr);
+							});
+
+						for( var seatsKey in sections ){ (function(seatsKey) {
+							getSeats(seatsKey, function(seats) {
+
+								sections[seatsKey].openSeats = seats;
+
+								sectionsArr.push(sections[seatsKey]);
+
+								done();
+							});
+
+						})(seatsKey); }
 					}
 				);
 			}

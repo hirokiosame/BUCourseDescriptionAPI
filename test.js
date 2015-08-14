@@ -35,6 +35,23 @@ API.sections("CAS", "CS", "111", function(err, sections){
 	console.assert(typeof sections === "object", "Unexpected 'sections' type", typeof sections);
 });
 
-API.sections("CAS", "NE", "101", function(err, sections){
+// API.sections("CAS", "NE", "101", function(err, sections){
+// 	console.log(JSON.stringify(sections, 0, 4));
+// });
+
+API.sections("MET", "AT", "602", function(err, sections){
+	console.assert(!err, "There is an error", err);
+	console.assert(typeof sections === "object", "Unexpected 'sections' type", typeof sections);
 	console.log(JSON.stringify(sections, 0, 4));
+});
+
+API.sections("MET", "AT", "602", function(err, sections){
+	console.assert(!err, "There is an error", err);
+	console.assert(typeof sections === "object", "Unexpected 'sections' type", typeof sections);
+	console.log(JSON.stringify(sections, 0, 4));
+});
+
+
+API.seats("2015FALLCASCS111 A1", function(seats){
+	console.assert(seats === null || typeof seats === "number");
 });
