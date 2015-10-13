@@ -42,7 +42,11 @@ module.exports = (function(){
 					building: _loc[0],
 					room: _loc[1]
 				};
-			}else{ sched.location = loc; }	
+			}else{
+				sched.location = {
+					building: loc
+				};
+			}	
 		}
 
 		var _time = time.split(/[\s\-]/);
