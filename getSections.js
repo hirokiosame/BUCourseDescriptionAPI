@@ -44,7 +44,8 @@ module.exports = (function(){
 				};
 			}else{
 				sched.location = {
-					building: loc
+					building: loc,
+					room: ''
 				};
 			}	
 		}
