@@ -45,6 +45,10 @@ node ./test.js
 ```
 
 
+## Disclaimer
+Use at your own risk. I'm not to be held responsible in any way for any actions/damages caused by using this API module.
+
+
 ## License
 The MIT License (MIT)
 
