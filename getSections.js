@@ -1,16 +1,16 @@
 module.exports = (function(){
 
-	var get = require("./get"),
-		async = require("async"),
-		cheerio = require("cheerio");
+	var get = require('./get'),
+		async = require('async'),
+		cheerio = require('cheerio');
 
 
 	// Create patterns for td matching
-	var tdPattern = "", depPattern = "";
+	var tdPattern = '', depPattern = '';
 	for(var i = 0; i<8; i++){
-		tdPattern += "\<td.*?\>(.*?)\<\/td\>";
+		tdPattern += '\<td.*?\>(.*?)\<\/td\>';
 		if( i < 4 ){
-			depPattern += "\<td.*?\>(.*?)\<\/td\>";
+			depPattern += '\<td.*?\>(.*?)\<\/td\>';
 		}
 	}
 	tdPattern = new RegExp(tdPattern);
@@ -19,11 +19,11 @@ module.exports = (function(){
 
 	function parseTime(time, pm){
 
-		time = time.split(":");
+		time = time.split(':');
 
 		var mins = time[0]*60 + +time[1];
 
-		if( pm === "pm" && time[0] !== "12" ){
+		if( pm === 'pm' && time[0] !== '12' ){
 			mins += 60*12;
 		}
 
@@ -36,7 +36,7 @@ module.exports = (function(){
 		};
 
 		if( (loc = loc.trim()).length > 1 ){
-			var _loc = loc.split(" ");
+			var _loc = loc.split(' ');
 			if( _loc.length === 2 ){
 				sched.location = {
 					building: _loc[0],
@@ -53,7 +53,7 @@ module.exports = (function(){
 		var _time = time.split(/[\s\-]/);
 
 		if( _time.length === 5 ){
-			sched.days = _time[0].split("");
+			sched.days = _time[0].split('');
 			sched.start = parseTime(_time[1], _time[2]);
 			sched.end = parseTime(_time[3], _time[4]);
 		}
@@ -66,7 +66,7 @@ module.exports = (function(){
 	function parseRow(sem, $, tr, cb){
 
 		var $tr = $(tr),
-			seatsKey = tr.attribs["data-section"];
+			seatsKey = tr.attribs['data-section'];
 
 		var html = $tr.html();
 
@@ -81,7 +81,7 @@ module.exports = (function(){
 			schedule: [],
 			seatsKey: seatsKey,
 			notes: (function(note) {
-				note = note.trim().replace(/\<br\>/gmi, "\n");
+				note = note.trim().replace(/\<br\>/gmi, '\n');
 
 				if( note.length === 0 ){ return null; }
 
@@ -93,7 +93,7 @@ module.exports = (function(){
 		if( parsedSched ){ section.schedule.push(parsedSched); }
 
 		// Check for dependent sections
-		while( (tr = tr.next) && !tr.attribs["data-section"] ){
+		while( (tr = tr.next) && !tr.attribs['data-section'] ){
 			var match = $(tr).html().match(depPattern);
 
 			if( match ){
@@ -104,7 +104,7 @@ module.exports = (function(){
 		}
 
 		if( this[seatsKey] ){
-			cb(new Error("Duplicate seatsKey"));
+			cb(new Error('Duplicate seatsKey'));
 		}else{
 
 			this[seatsKey] = section;
@@ -118,13 +118,13 @@ module.exports = (function(){
 
 		// Parse table
 		async.each(
-			[].slice.apply($sem.next("table").find("tr[data-section]")),
+			[].slice.apply($sem.next('table').find('tr[data-section]')),
 			parseRow.bind(this, semester, $),
 			nextSem
 		);
 	}
 
-	var getSeats = require("./getSeats");
+	var getSeats = require('./getSeats');
 
 	function untilN(n, cb) {
 		return function() {
@@ -134,7 +134,7 @@ module.exports = (function(){
 
 	return function(collegeCode, depCode, courseNum, cb){
 		get.http(
-			"http://www.bu.edu/phpbin/course-search/section/",
+			'http://www.bu.edu/phpbin/course-search/section/',
 			{ t: collegeCode + depCode + courseNum },
 			function(err, body){
 
@@ -142,9 +142,9 @@ module.exports = (function(){
 
 				var $ = cheerio.load(body);
 
-				var semesters = [].slice.apply($("h3"));
+				var semesters = [].slice.apply($('h3'));
 
-				if( semesters.length === 0 ){ cb(new Error("Course doesn't exist")); return;}
+				if( semesters.length === 0 ){ cb(new Error('Course doesn\'t exist')); return;}
 
 				var sections = {};
 
